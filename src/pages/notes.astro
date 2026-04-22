@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const notes = (await getCollection('notes')).sort((a, b) => a.id.localeCompare(b.id)).reverse();
+---
+
+<BaseLayout title="Notes | Younghun Lee">
+  <h1>Notes</h1>
+  <p class="muted">Short technical notes and references. Lightweight, iterative, and easy to update.</p>
+
+  {notes.map((note) => (
+    <article class="card">
+      <h2><a href={`/notes/${note.id.replace('.md', '')}`}>{note.data.title}</a></h2>
+      {note.data.summary && <p>{note.data.summary}</p>}
+      {note.data.tags.length > 0 && <p class="muted">Tags: {note.data.tags.join(', ')}</p>}
+    </article>
+  ))}
+</BaseLayout>
